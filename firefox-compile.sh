@@ -11,10 +11,31 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export DEBIAN_FRONTEND=noninteractive
 export SHELL=/bin/sh make
 
-echo 
-echo "Please specify number of threads to compile with:"
-read threads
-echo
+
+          # Physical sockets
+        sockets=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
+
+        # Physical Cores
+        if [[ $CPU == "x86" ]] ; then
+                procs=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
+                pcores=$(grep "cpu cores" /proc/cpuinfo |sort -u |cut -d":" -f2)
+                cores=$((procs*pcores))
+        elif [[ $CPU == "ARM" ]] ; then
+                cores=$(grep "processor" /proc/cpuinfo | wc -l)
+        else
+                echo "Unknown CPU"
+        fi
+
+        # Virtual Cores (include threads)
+        vcores=$(grep "processor" /proc/cpuinfo | wc -l)
+        threads=$vcores
+        nproc=$vcores
+
+
+#echo 
+#echo "Please specify number of threads to compile with:"
+#read threads
+#echo
 echo "Threads specified: " $threads
 
 
