@@ -15,7 +15,7 @@ echo
 echo "Please specify number of threads to compile with:"
 read threads
 echo
-echo Threads specified: $threads
+echo "Threads specified: " $threads
 
 
 apt-get -y update
